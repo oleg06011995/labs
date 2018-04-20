@@ -15,6 +15,7 @@ const AdjacencyMatrix = (data, isOriented) => {
   let n = 0;
   let m = 0;
   let matrix = [];
+  let edges = [];
   data.forEach((line, i) => {
     // Для первой строки в файле со значениями количества вершин и ребёр
     if(i === 0) {
@@ -33,7 +34,12 @@ const AdjacencyMatrix = (data, isOriented) => {
       }
     }
   });
-  return { n, m, matrix, data };
+  // Найти рёбра на основе матрицы смежности
+  edges = matrix.reduce((res, line, i) => {
+    res[i + 1] = line.map((col, j) => col ? j + 1 : null).filter(n => n).sort((a, b) => a > b);
+    return res;
+  }, {});
+  return { n, m, matrix, edges, data };
 };
 
 module.exports = AdjacencyMatrix; // Экспорт для использования во внешних файлах
