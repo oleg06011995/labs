@@ -1,4 +1,6 @@
+'use strict';
 // При реалізації алгоритмів вважати, що заданий граф є зв’язаним.
+
 const ask = require('./promt.js'); // Хэлпер для интерактивности в работе с командной строкой
 const helpers = require('./matrix.helpers.js'); // Хэлперы для работы с матрицами
 const AdjacencyMatrix = require('./graph.js'); // Весь код по созданию матрицы смежности
@@ -11,10 +13,9 @@ const dataByStr = fileData
 
 // Инициализировать граф и его матрицу смежности
 const Graph = AdjacencyMatrix(dataByStr);
-console.log(Graph.matrix)
+console.log(Graph.matrix); // Вывод матрицы смежности на экран
 
 ask('Введите номер вершины, с которой необходимо начать поиск (число от 1 до n, где n - количество вершин графа):', main);
-
 
 
 function main(self, vertex) {
@@ -34,7 +35,7 @@ function BFSfunc(start) {
   const BFS = {};
   const Q = []; // Очередь
 
-  let k = 1;
+  let k = 1; // Задать начальный индекс вершины
   BFS[start] = k; // Записать индекс BFS для начальной вершины
   Q.push(start); // Добавить начальную вершину в очередь
   console.log("Вершина: "+start, "BFS-номер: "+BFS[start], "Очередь: "+Q.join(','));
@@ -44,7 +45,7 @@ function BFSfunc(start) {
     let v = Q.shift(); // Взять первую вершину в очереди
     console.log("Вершина: -", "BFS-номер: -", "Очередь: "+Q.join(','));
 
-    // Пробегаемся по всем смежным вершинам
+    // Проходим по всем смежным вершинам
     for (let i = 0; i < Graph.edges[v].length; i++) {
       if (!BFS[Graph.edges[v][i]]) { // Если ещё нет BFS индекса
         k++; // Увеличить индекс пройденных вершин на 1
@@ -94,24 +95,23 @@ function DFSfunc(start) {
 
 
 // Рекурсивная реализация DFS
-function DFSfuncRec(start) {
+function DFSfuncRec(v) {
+  let k = 1; // Задать начальный индекс вершины
   const DFS = {};
   const order = [];
-  let k = 1; // Задать начальный индекс вершины
-
-  search(start);
+  search(v);
 
   function search(v) {
-    if (DFS[v]) { // Если индекс у вершины уже есть - ничего не делать 
-      console.log("Вершина: -", "DFS-номер: -", "Последовательность прохода: "+order.join(','));
-      return;
-    }
     DFS[v] = k; // Пометить вершины как пройденную. Задать ей индекс k
     order.push(v);
     console.log("Вершина: "+v, "DFS-номер: "+k, "Последовательность прохода: "+order.join(','));
     k++; // Увеличить индекс пройденных вершин на 1
     for (let i = 0; i < Graph.edges[v].length; i++) { // Для каждого ребра
-      search(Graph.edges[v][i]); // Запускаемся из смежной вершины
+      if (!DFS[Graph.edges[v][i]]) {
+        search(Graph.edges[v][i]); // Запускаемся из смежной вершины
+      } else {
+        console.log("Вершина: -", "DFS-номер: -", "Последовательность прохода: "+order.join(','));
+      }
     }
   };
 

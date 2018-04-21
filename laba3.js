@@ -11,7 +11,7 @@ const dataByStr = fileData
 const Graph = AdjacencyMatrix(dataByStr, true);
 
 // Хэлпер: композиция функций
-const compose = (f1, f2, f3) => (...args) => f3(f2(f1(...args)))
+const compose = (f1, f2, f3) => (...args) => f3(f2(f1(...args)));
 
 // 1. ЗНАЙТИ МАТРИЦЮ ВІДСТАНЕЙ
 const D = getDistanceMatrix();
@@ -19,7 +19,7 @@ console.log("\nМАТРИЦЯ ВІДСТАНЕЙ:\n", D, "\n");
 
 // 2. ЗНАЙТИ МАТРИЦЮ ДОСЯЖНОСТІ
 const R = getReachabilityMatrix();
-console.log("\nМАТРИЦЯ ДОСЯЖНОСТІ:\n", R, "\n")
+console.log("\nМАТРИЦЯ ДОСЯЖНОСТІ:\n", R, "\n");
 
 // 3. ЗНАЙТИ ТИП ГРАФУ
 const type = checkGraphType(R);
@@ -46,7 +46,8 @@ function getDistanceMatrix() {
   let notNull = true;
 
   // Пока есть нули в графе (флаг nullPresent) и степень матрицы смежности не нулевая матрица (флаг notNull)
-  while (nullPresent && notNull) {
+  let k = 1;
+  while (nullPresent && notNull && k <= Graph.m) {
     nullPresent = false;
     power++;
     matrixPower = helpers.multiply(matrixPower || Graph.matrix, Graph.matrix); // Возвести в степень матрицу смежности
@@ -62,9 +63,10 @@ function getDistanceMatrix() {
         }
       }
     }
+    k++;
   }
   return D;
-}
+};
 
 // МАТРИЦЯ ДОСЯЖНОСТІ
 // По формуле: B[(I + ∆)^n–1], где:
@@ -83,7 +85,7 @@ function getReachabilityMatrix() {
 
   // 4) Булевое преобразование (B - замена всех значений >0 на 1)
   return helpers.boolTransform(res);
-}
+};
 
 // ТИП ГРАФА
 // При помощи композиции функций compose поочерёдно проверяю ТИП графа
@@ -108,4 +110,4 @@ function checkGraphType(R) {
     ) ? 'low' : null;
   }
   return type;
-}
+};
