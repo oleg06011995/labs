@@ -1,14 +1,13 @@
-const helpers = require('./matrix.helpers.js'); // Хэлперы для работы с матрицами
-const AdjacencyMatrix = require('./graph.js'); // Весь код по созданию матрицы смежности
-const fs = require('fs'); // Для работы с файлами
-const fileData = fs.readFileSync('graph.txt'); // Прочитать данные из файла
-const dataByStr = fileData
-  .toString()
-  .split("\n")
-  .filter(str => str); // Разложить данные файла по строкам и удалить пустые строки
+'use strict';
 
-// Инициализировать граф и его матрицу смежности
-const Graph = AdjacencyMatrix(dataByStr, true);
+// Хэлперы для работы с матрицами
+const helpers = require('./matrix.helpers.js');
+
+// Весь код по созданию графа: его матрицы, рёбер
+const InitGraph = require('./graph.js');
+
+// Инициализировать граф
+const Graph = InitGraph('graph3.txt', true);
 
 // Хэлпер: композиция функций
 const compose = (f1, f2, f3) => (...args) => f3(f2(f1(...args)));
@@ -22,19 +21,20 @@ const R = getReachabilityMatrix();
 console.log("\nМАТРИЦЯ ДОСЯЖНОСТІ:\n", R, "\n");
 
 // 3. ЗНАЙТИ ТИП ГРАФУ
+console.log("\nТИП ГРАФУ:");
 const type = checkGraphType(R);
 switch(type) {
   case 'strong':
-    console.log("Граф сильно зв’язананий");
+    console.log("Граф сильно зв’язананий\n");
     break;
   case 'singleSide':
-    console.log("Граф однобічно зв’язананий");
+    console.log("Граф однобічно зв’язананий\n");
     break;
   case 'low':
-    console.log("Граф слабо зв’язананий");
+    console.log("Граф слабо зв’язананий\n");
     break;
   default: 
-    console.log("Граф не зв’язананий")
+    console.log("Граф не зв’язананий\n")
 }
 
 // МАТРИЦА РАССТОЯНИЙ
@@ -47,7 +47,7 @@ function getDistanceMatrix() {
 
   // Пока есть нули в графе (флаг nullPresent) и степень матрицы смежности не нулевая матрица (флаг notNull)
   let k = 1;
-  while (nullPresent && notNull && k <= Graph.m) {
+  while (nullPresent && notNull && k <= Graph.n) {
     nullPresent = false;
     power++;
     matrixPower = helpers.multiply(matrixPower || Graph.matrix, Graph.matrix); // Возвести в степень матрицу смежности

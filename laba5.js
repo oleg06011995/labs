@@ -1,30 +1,49 @@
 'use strict';
-// При реалізації вважати, що заданий граф є орієнтованим та ациклічним.
+// При реалізації вважати, що заданий граф є орієнтованим.
 
-const ask = require('./promt.js'); // Хэлпер для интерактивности в работе с командной строкой
-const helpers = require('./matrix.helpers.js'); // Хэлперы для работы с матрицами
-const AdjacencyMatrix = require('./graph.js'); // Весь код по созданию матрицы смежности
-const fs = require('fs'); // Для работы с файлами
-const fileData = fs.readFileSync('graph4.txt'); // Прочитать данные из файла
-const dataByStr = fileData
-  .toString()
-  .split("\n")
-  .filter(str => str); // Разложить данные файла по строкам и удалить пустые строки
+// Весь код по созданию графа: его матрицы, рёбер
+const InitGraph = require('./graph.js');
 
-// Инициализировать граф и его матрицу смежности
-const Graph = AdjacencyMatrix(dataByStr);
-// console.log(Graph.matrix); // Вывод матрицы смежности на экран
+// Инициализировать граф
+const Graph = InitGraph('graph5.txt', true);
 
-TopologicalSort(граф G)
-1. позначити всі вершини як не відвідані
-2. current_label ← n (кількість вершин графу)
-3. для кожної вершини v графу G:
-4. if вершина v ще не відвідана
-5. DFSR(G, v)
-DFSR(граф G, початкова вершина s)
-1. позначити s як відвідану
-2. для кожного ребра (s, u) в G:
-3. if вершина u ще не відвідана
-4. DFSR(G, u)
-5. f[s] ← current_label
-6. current_label ← current_label – 1
+const mark = {}; // Объект для отмечания пройденности вершин
+const topSort = {}; // Объект для отмечания топологического порядка вершин
+const order = []; // Массив вершин в порядке обратном топологическому
+let currentLabel = Graph.n; // Текущий порядок вершин
+
+const canSort = TopologicalSort(Graph); // Возвращает true, если граф ацикличный
+
+if (canSort) {
+  console.log("\nТопологічний порядок кожної вершини: ", topSort, "\n");
+  console.log("Вершини, відповідно до порядку: ", order.reverse().join(' --- '), "\n");
+} else {
+  console.log("\nНеможливо відсортувати, оскільки присутній цикл\n");
+}
+
+// Сортирует вершины графа
+function TopologicalSort(G) {
+  let loop = false; // проверка наличия цикла через DFSR метод
+  for (let v = 1; v < G.n; v++) {
+    loop = DFSR(G, v);
+    if(loop) return false; // если есть цикл - топологическое построение невозможно
+  }
+  return true;
+};
+
+// Поиск в глубину (с проверкой графа на цикличность)
+function DFSR(G, v) {
+  if (mark[v] === 1) return true; // найден цикл: вершина уже встречалась, но не все смежные вершины проверены
+  if (mark[v] === 2) return false; // вершина уже встречалась и все смежные вершины проверены
+  mark[v] = 1; // отмечаю вершину как пройденную
+  for (let i = 0; i < G.edges[v].length; i++) {
+    if (DFSR(G, G.edges[v][i])) { // если вершина уже встречалась, то найден цикл
+      return true;
+    }
+  }
+  topSort[v] = currentLabel; // записываю порядок для текущей вершины
+  order.push(v);
+  mark[v] = 2; // отмечаю вершину как полностью проверенную
+  currentLabel--; // уменьшаю порядок топологической сортировки
+  return false;
+};

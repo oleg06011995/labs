@@ -15,8 +15,9 @@ const initEmptyMatrix = (lines, columns) => {
 };
 
 // Инициализация матрицы смежности
-const InitGraph = (filePath, isOriented, needTrans) => {
+const InitGraph = (filePath, isOriented) => {
   const fileData = fs.readFileSync(filePath); // Прочитать данные из файла
+  let isNegative = false;
   const data = fileData
     .toString()
     .split("\n")
@@ -26,46 +27,28 @@ const InitGraph = (filePath, isOriented, needTrans) => {
   // [JS]: форма записи const [n, m] = array - означает деструктуризация массива в перменные
   const [n, m] = data[0].split(' ').map(item => parseInt(item)); // достать количество вершин и рёбер
   const matrix = initEmptyMatrix(n, n); // наполнение матрицы смежности пустыми значениями
-  let transMatrix = [];
-  let transEdges = {};
 
   // По остальным строкам в файле - рёбрам - заполнить матрицу смежности
   for (let i = 1; i < m; i++) {
-    const [v, u] = data[i].split(' ');
+    const [v, u, w] = data[i].split(' ');
+    isNegative = w < 0 ? true : isNegative;
     if (isOriented) { // Не симметричное заполнение матрицы смежности для ориентированного графа
-      matrix[v - 1][u - 1] = 1;
+      matrix[v - 1][u - 1] = w;
     } else { // Симметричное заполнение матрицы смежности для неориентированного графа
-      matrix[v - 1][u - 1] = matrix[u - 1][v - 1] = 1;
+      matrix[v - 1][u - 1] = matrix[u - 1][v - 1] = w;
     }
   };
 
-  // Найти рёбра на основе матрицы смежности
+  // Найти рёбра на основе матрицы смежности, где значение с индексом ij - вес ребра
   const edges = matrix.reduce((res, line, i) => {
-    res[i + 1] = line
-        .map((col, j) => col ? j + 1 : null)
-        .filter(n => n)
-        .sort((a, b) => a > b);
+    res[i + 1] = line.reduce((obj, col, j) => {
+      if (col) {
+        obj[j + 1] = +col;
+      }
+      return obj;
+    }, {})
     return res;
   }, {});
-
-  if (needTrans) {
-    transMatrix = initEmptyMatrix(n, n); // наполнение транспорированной матрицы смежности пустыми значениями
-
-    // Заполнить матрицу смежности для транспорированного графа
-    for (let i = 1; i < m; i++) {
-      const [u, v] = data[i].split(' ');
-      transMatrix[v - 1][u - 1] = 1;
-    };
-
-    // Найти рёбра транспорированного графа на основе матрицы смежности
-    transEdges = transMatrix.reduce((res, line, i) => {
-      res[i + 1] = line
-          .map((col, j) => col ? j + 1 : null)
-          .filter(n => n)
-          .sort((a, b) => a > b);
-      return res;
-    }, {});
-  }
 
   // Вернуть информацию про граф:
   return {
@@ -74,8 +57,7 @@ const InitGraph = (filePath, isOriented, needTrans) => {
     matrix, // матрица смежности
     edges, // рёбра графа
     data, // входящие данные
-    transMatrix, // матрица смежности транспорированного графа
-    transEdges, // рёбра графа транспорированного графа
+    isNegative, // присутствуют отрицательные веса ребёр
   };
 };
 

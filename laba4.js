@@ -1,32 +1,34 @@
 'use strict';
 // При реалізації алгоритмів вважати, що заданий граф є зв’язаним.
 
-const ask = require('./promt.js'); // Хэлпер для интерактивности в работе с командной строкой
-const helpers = require('./matrix.helpers.js'); // Хэлперы для работы с матрицами
-const AdjacencyMatrix = require('./graph.js'); // Весь код по созданию матрицы смежности
-const fs = require('fs'); // Для работы с файлами
-const fileData = fs.readFileSync('graph4.txt'); // Прочитать данные из файла
-const dataByStr = fileData
-  .toString()
-  .split("\n")
-  .filter(str => str); // Разложить данные файла по строкам и удалить пустые строки
+// Хэлпер для интерактивности в работе с командной строкой
+const ask = require('./promt.js');
 
-// Инициализировать граф и его матрицу смежности
-const Graph = AdjacencyMatrix(dataByStr);
-console.log(Graph.matrix); // Вывод матрицы смежности на экран
+// Весь код по созданию графа: его матрицы, рёбер
+const InitGraph = require('./graph.js');
 
-ask('Введите номер вершины, с которой необходимо начать поиск (число от 1 до n, где n - количество вершин графа):', main);
+// Инициализировать граф
+const Graph = InitGraph('graph4.txt');
+// console.log(Graph.matrix); // Вывод матрицы смежности
 
+ask(
+  "Введите номер вершины, с которой необходимо начать поиск \
+(число от 1 до n, где n - количество вершин графа; \
+по умолчанию 2):",
+  main
+);
 
 function main(self, vertex) {
   console.log("\nТАБЛИЦА BFS ПОИСКА:")
-  BFSfunc(+vertex);
+  BFSfunc(+vertex.trim() || 2);
 
   console.log("\nТАБЛИЦА DFS2 ПОИСКА -> Простой вызов:")
-  DFSfunc(+vertex);
+  DFSfunc(+vertex.trim() || 2);
 
   console.log("\nТАБЛИЦА DFS2 ПОИСКА -> Рекурсивный вызов:")
-  DFSfuncRec(+vertex);
+  DFSfuncRec(+vertex.trim() || 2);
+
+  console.log("\n")
 }
 
 
