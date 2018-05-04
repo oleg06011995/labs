@@ -37,7 +37,7 @@ switch(type) {
     console.log("Граф не зв’язананий\n")
 }
 
-// МАТРИЦА РАССТОЯНИЙ
+// МАТРИЦЯ ВІДСТАНЕЙ
 function getDistanceMatrix() {
   const D = [];
   let matrixPower;

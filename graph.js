@@ -30,16 +30,18 @@ const InitGraph = (filePath, isOriented, needTrans) => {
   let transEdges = {};
 
   // По остальным строкам в файле - рёбрам - заполнить матрицу смежности
-  for (let i = 1; i < m; i++) {
+  for (let i = 1; i <= m; i++) {
     const [v, u] = data[i].split(' ');
-    if (isOriented) { // Не симметричное заполнение матрицы смежности для ориентированного графа
-      matrix[v - 1][u - 1] = 1;
-    } else { // Симметричное заполнение матрицы смежности для неориентированного графа
-      matrix[v - 1][u - 1] = matrix[u - 1][v - 1] = 1;
+    if (v && u) {
+      if (isOriented) { // Не симметричное заполнение матрицы смежности для ориентированного графа
+        matrix[v - 1][u - 1] = 1;
+      } else { // Симметричное заполнение матрицы смежности для неориентированного графа
+        matrix[v - 1][u - 1] = matrix[u - 1][v - 1] = 1;
+      }
     }
   };
 
-  // Найти рёбра на основе матрицы смежности
+  // Выписать рёбра на основе матрицы смежности
   const edges = matrix.reduce((res, line, i) => {
     res[i + 1] = line
         .map((col, j) => col ? j + 1 : null)
@@ -52,7 +54,7 @@ const InitGraph = (filePath, isOriented, needTrans) => {
     transMatrix = initEmptyMatrix(n, n); // наполнение транспорированной матрицы смежности пустыми значениями
 
     // Заполнить матрицу смежности для транспорированного графа
-    for (let i = 1; i < m; i++) {
+    for (let i = 1; i <= m; i++) {
       const [u, v] = data[i].split(' ');
       transMatrix[v - 1][u - 1] = 1;
     };
@@ -73,7 +75,7 @@ const InitGraph = (filePath, isOriented, needTrans) => {
     m, // количество рёбер
     matrix, // матрица смежности
     edges, // рёбра графа
-    data, // входящие данные
+    data, // входящие данные (списком рёбер)
     transMatrix, // матрица смежности транспорированного графа
     transEdges, // рёбра графа транспорированного графа
   };
