@@ -2,10 +2,10 @@
 // При реалізації вважати, що заданий граф є орієнтованим.
 
 // Весь код по созданию графа: его матрицы, рёбер и транспонирования
-const InitGraph = require('./graph.js');
+const InitGraph = require('../graph.js');
 
 // Инициализировать граф (и транспорированный граф)
-const Graph = InitGraph('graph6.txt', true, true);
+const Graph = InitGraph('lab6/graph6.txt', true, true);
 
 let mark = {}; // Объект для отмечания пройденности вершин
 const orderByTime = []; // Массив вершин в порядке, который соответствуют 

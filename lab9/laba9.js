@@ -1,11 +1,11 @@
 // Хэлпер для интерактивности в работе с командной строкой
-const ask = require('./promt.js');
+const ask = require('../promt.js');
 
 // Весь код по созданию графа: его матрицы, рёбер и транспонирования
-const InitGraph = require('./weightedGraph.js');
+const InitGraph = require('../weightedGraph.js');
 
 // Инициализировать взвешенный граф
-const Graph = InitGraph('graph9.txt', true);
+const Graph = InitGraph('lab9/graph9.txt', true);
 
 ask(
   "Введіть через пробіл номера вершин, між якими необхідно провести пошук,\n \

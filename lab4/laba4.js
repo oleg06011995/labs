@@ -2,13 +2,13 @@
 // При реалізації алгоритмів вважати, що заданий граф є зв’язаним.
 
 // Хэлпер для интерактивности в работе с командной строкой
-const ask = require('./promt.js');
+const ask = require('../promt.js');
 
 // Весь код по созданию графа: его матрицы, рёбер
-const InitGraph = require('./graph.js');
+const InitGraph = require('../graph.js');
 
 // Инициализировать граф
-const Graph = InitGraph('graph4.txt');
+const Graph = InitGraph('lab4/graph4.txt');
 // console.log(Graph.matrix); // Вывод матрицы смежности
 
 ask(

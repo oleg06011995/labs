@@ -12,16 +12,16 @@
 // ** while(!Q.isEmpty()) -> while(Q.length > 0)
 
 // Хэлпер для интерактивности в работе с командной строкой
-const ask = require('./promt.js');
+const ask = require('../promt.js');
 
 // Весь код по созданию графа: его матрицы, рёбер и транспонирования
-const InitGraph = require('./weightedGraph.js');
+const InitGraph = require('../weightedGraph.js');
 
 // Инициализация очереди приоритетов
 const PriorityQueue = require('./PriorityQueue.js');
 
 // Инициализировать взвешенный граф
-const Graph = InitGraph('graph7.txt', true);
+const Graph = InitGraph('lab7/graph7.txt', true);
 
 if (Graph.isNegative) {
   console.log("\n\

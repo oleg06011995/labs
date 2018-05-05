@@ -2,10 +2,10 @@
 // При реалізації вважати, що заданий граф є орієнтованим.
 
 // Весь код по созданию графа: его матрицы, рёбер
-const InitGraph = require('./graph.js');
+const InitGraph = require('../graph.js');
 
 // Инициализировать граф
-const Graph = InitGraph('graph5.txt', true);
+const Graph = InitGraph('lab5/graph5.txt', true);
 
 const mark = {}; // Объект для отмечания пройденности вершин
 const topSort = {}; // Объект для отмечания топологического порядка вершин

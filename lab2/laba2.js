@@ -1,13 +1,13 @@
 'use strict';
 
 // Хэлперы для работы с матрицами
-const helpers = require('./matrix.helpers.js');
+const helpers = require('../matrix.helpers.js');
 
 // Весь код по созданию графа: его матрицы, рёбер
-const InitGraph = require('./graph.js');
+const InitGraph = require('../graph.js');
 
 // Инициализировать граф
-const Graph = InitGraph('graph2.txt');
+const Graph = InitGraph('lab2/graph2.txt');
 
 main();
 
