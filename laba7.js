@@ -25,17 +25,17 @@ const Graph = InitGraph('graph7.txt', true);
 
 if (Graph.isNegative) {
   console.log("\n\
-Алгоритм Дейкстры работает только для графов с неотрицательными весами.\n\
-Проверьте граф и попробуйте ещё раз.\n");
+Алгоритм Дейкстри працює тільки для графів с невід'ємними вагами.\n\
+Перевірте граф та спробуйте ще раз.\n");
 } else {
   ask(
-    "Введите через пробел номера вершин, между которыми необходимо провести поиск\n \
-(числа от 1 до n, где n - количество вершин графа; по умолчанию '1 8'):",
+    "Введіть через пробіл номера вершин, між якими необхідно провести пошук\n \
+(числа від 1 до n, де n - кількість вершин графа; за замовчуванням '1 8'):",
     main
   );
 }
 
-
+// ТОЧКА ВХОДА!
 function main(self, str) {
   let [start, finish] = str.trim().split(' ');
 
@@ -44,30 +44,28 @@ function main(self, str) {
     finish = '8';
   }
   
-  const d = new Dijkstra(Graph); // Инициализация алгоритма Дейкстры
+  const algorithm = new Dijkstra(Graph); // Инициализация алгоритма Дейкстры
 
-  const { path, distances, count } = d.findDistances(start, finish); // Найти путь и дистанции
+  console.log("\nРЕБРА ГРАФУ:");
+  console.log(Graph.edges);
+
+  const { path, distances, count } = algorithm.findDistances(start, finish); // Найти путь и дистанции
   const distance = distances[finish]; // подсчёт полной дистанции между указанными вершинами
 
   // Вывод результатов
-  console.log("\nКРАТЧАЙШЕЕ РАССТОЯНИЕ: ", distance);
-  console.log("\nКРАТЧАЙШИЙ МАРШРУТ: ", path.reverse());
-  console.log("\nКОЛИЧЕСТВО ПРОХОДОВ ДЛЯ ПОИСКА КРАТЧАЙШЕГО МАРШРУТА: ", count);
-  console.log("\n-----------------------------");
-  console.log("\nКРАТЧАЙШИЕ РАССТОЯНИЯ ДО КАЖДОЙ ВЕРШИНЫ ИЗ НАЧАЛЬНОЙ (" + start + "): ");
-  console.log(distances);
+  console.log("\nНАЙКОРОТША ВІДСТАНЬ::\n =", distance);
+  console.log("\nНАЙКОРОТШИЙ ШЛЯХ ВІД ВЕРШИНИ " + start + " ДО ВЕРШИНИ " + finish + ":\n", buildPath(path.reverse()));
+  console.log("\nКІЛЬКІСТЬ ПРОХОДІВ ДЛЯ ПОШУКУ НАЙКОРОТШОГО ШЛЯХУ:\n =", count);
+  console.log("\nНАЙКОРОТШИЙ ШЛЯХ ВІД ВЕРШИНИ " + start + " ДО:");
+  console.log(buildDist(distances));
   console.log("\n");
-
 };
-
 
 // Алгоритм Дейкстры
 function Dijkstra(G) {
 
   const INFINITY = 1/0;
   this.edges = G.edges;
-  console.log("\nРЁБРА ВЗВЕШЕННОГО ГРАФА");
-  console.log(this.edges)
 
   // Найти кратчайший путь между вершинами
   this.findDistances = function (begin, end) {
@@ -153,4 +151,15 @@ function Dijkstra(G) {
     }
     return path.concat(begin);
   }
+};
+
+// <---- HELPERS ---->
+function buildPath(path) {
+  return path.join(' ---> ')
+};
+
+function buildDist(dist) {
+  Object.keys(dist).map(v => {
+    console.log(' -> вершини', v, '=', dist[v])
+  })
 };

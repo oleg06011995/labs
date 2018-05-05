@@ -8,7 +8,7 @@ const initEmptyMatrix = (lines, columns) => {
   for (let i = 0; i < lines; i++) {
     mtrx[i] = [];
     for (let j = 0; j < columns; j++){
-      mtrx[i].push(0);
+      mtrx[i].push(1/0);
     }
   }
   return mtrx;
@@ -33,8 +33,8 @@ const InitGraph = (filePath, isOriented) => {
   for (let i = 1; i <= m; i++) {
     const [v, u, w] = data[i].split(' ');
     edgeList.push({ 
-      first: v, 
-      second: u, 
+      begin: v,
+      end: u,
       weight: w
     })
     isNegative = w < 0 ? true : isNegative;
