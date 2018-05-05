@@ -4,9 +4,6 @@ const ask = require('./promt.js');
 // Весь код по созданию графа: его матрицы, рёбер и транспонирования
 const InitGraph = require('./weightedGraph.js');
 
-// Инициализация очереди приоритетов
-const PriorityQueue = require('./PriorityQueue.js');
-
 // Инициализировать взвешенный граф
 const Graph = InitGraph('graph9.txt', true);
 
@@ -28,30 +25,24 @@ function main(self, str) {
   const INFINITY = 1/0;
   const algorithm = new FloydWarshall(Graph); // Инциализировать алгоритм Флойда-Уоршелла
 
-  const { dist, path, isNegLoop, negLoopVertex } = algorithm.findDistances(start, finish); // Найти расстояния
-  if (isNegLoop) {
-    console.log("\nПрисутній цикл з від'ємною вагою.");
-  }
+  const { dist, prev, path, isNegLoop } = algorithm.findPathBetweenTwo(start, finish); // Найти расстояния
 
   console.log("\nМАТРИЦЯ НАЙКОРОТШИХ ВІДСТАНЕЙ МІЖ УСІМА ПАРАМИ ВЕРШИН:");
   printMatrix(dist);
 
-  console.log("\nМАТРИЦЯ НАЙКОРОТШИХ ШЛЯХІВ МІЖ УСІМА ПАРАМИ ВЕРШИН:");
-  printMatrix(path);
+  console.log("\nМАТРИЦЯ ПОПЕРЕДНІХ ШЛЯХІВ ДЛЯ УСІХ ПАР ВЕРШИН:");
+  printMatrix(prev);
 
-  // const { dist, path, isNegLoop, negLoopVertex } = algorithm.findDistancesBetweenTwo(start, finish);
-  //   if (isNegLoop) {
-  //     console.log("\nЗнайден цикл з від'ємною вагою.");
-  //   }
+  console.log(
+    "\nНАЙКОРОТШИЙ ШЛЯХ ВІД ВЕРШИНИ " + start + " ДО ВЕРШИНИ " + finish + ":\n",
+    printPath(path, prev, start, finish)
+  );
 
-  //   if (!path) {
-  //     console.log("\nНемає шляху від вершини " + start + " до вершини " + finish + ".");
-  //   } else {
-  //     printMatrix(dist)
-  //     // console.log("\nНАЙКОРОТША ВІДСТАНЬ ВІД ВЕРШИНИ " + start + " ДО ВЕРШИНИ " + finish + ":\n =", dist);
-  //     // console.log("\nНАЙКОРОТШИЙ ШЛЯХ ВІД ВЕРШИНИ " + start + " ДО ВЕРШИНИ " + finish + ":\n", buildPath(path, start, finish, isNegLoop));
-  //   }
-  // console.log("\n");
+  if (isNegLoop) {
+    console.log("\nУВАГА! Присутній цикл з від'ємною вагою.");
+  }
+
+  console.log("\n");
 };
 
 // Алгоритм Флойда-Уоршелла
@@ -62,106 +53,117 @@ function FloydWarshall(G) {
   this.n = G.n;
   this.m = G.m;
 
-  this.findDistances = function(begin) {
+  // Найти расстояния между всеми парами вершин
+  this.findDistances = function() {
     
-    // Для каждой вершины заполнить массив дистанций значением по умолчанию
+    // Для каждой вершины заполнить массив расстояний значением по умолчанию
     // -> применить для всех dist[i][i] = 0
     const dist = [...this.matrix.map((row, i) => {
       return row.map((col, j) => j === i ? 0 : col);
     })];
-    const path = [...this.matrix.map((row, i) => {
-      return row.map((col, j) => j === i ? 0 : INFINITY);
+
+    // Для каждой вершины заполнить массив её предшественника значением по умолчанию
+    // -> применить для всех вершин prev[i][i] = 0
+    // -> для всех других вершин заполнить значением -1
+    const prev = [...this.matrix.map((row, i) => {
+      return row.map((col, j) => j === i ? 0 : -1);
     })];
 
     console.log("\nМАТРИЦЯ СУМІЖНОСТІ ГРАФУ:");
     printMatrix(dist);
     
     let isNegLoop = false; // Флаг, показывающий есть ли цикл с отрицательными весами
-    let negLoopVertex;
 
     // Сделать k фаз
-    for (let k = 0; k < this.n; k++)
+    for (let k = 0; k < this.n; k++) { 
 
       // На каждой фазе пройтись по всем значениям матрицы
       for (let i = 0; i < this.n; i++) {
+
         for (let j = 0; j < this.n; j++) {
+
+          let alt = +dist[i][k] + +dist[k][j];
           
-          // Присвоить значение расстояние между вершинами i и j
-          if (dist[i][k] < INFINITY && dist[k][j] < INFINITY) {
-            // path[i][j] = path[i][j] !== INFINITY ? path[i][j] + ' ' + k : k;
-            dist[i][j] = Math.min(dist[i][j], +dist[i][k] + +dist[k][j]);
+          // Проверка для INFINITY:
+          // -> для рёбер с отрицательным весом, чтобы не появлялись некорректные расстояния вида Infinity-2
+          // Проверка для текущего значения dist[i][j]:
+          // -> выполнится если новое расстояние между i и j меньше текущего
+          if (dist[i][k] < INFINITY && dist[k][j] < INFINITY && dist[i][j] > alt) {
+            dist[i][j] = alt; // Присвоить новое расстояние между вершинами i и j
+            prev[i][j] = k; // Обновить номер фазы в массиве предшественников:
+                            // -> здесь prev[i][j] - предшественник вершины j на кратчайшем пути из i
           }
           
           // Проверка вершин на принадлежность к негативному циклу
           for (let t = 0; t < this.n; t++) {
             if (dist[i][t] < INFINITY && dist[t][t] < 0 && dist[t][j] < INFINITY) {
               dist[i][j] = -INFINITY;
-              path[i][j] = -INFINITY;
+              prev[i][j] = -INFINITY;
               isNegLoop = true;
             }
           }
         }
       }
+    }
 
-    // Вернуть список расстояний до каждой вершины и список кратчайших путей
+    // Вернуть:
+    // -> @dist - матрица расстояний для каждой пары вершин
+    // -> @prev - матрица предшественников для каждой пары вершин
+    // -> @isNegLoop - наличие цикла с отрицательными весами
     return {
       dist,
-      path,
-      isNegLoop,
-      negLoopVertex,
+      prev,
+      isNegLoop
     }
   }
 
-  this.findDistancesBetweenTwo = function(begin, end) {
-    const { dist, path, isNegLoop, negLoopVertex } = this.findDistances(begin);
-    let p = [];
+  // Найти путь между двумя вершинами
+  this.findPathBetweenTwo = function(begin, end) {
+    const { dist, prev, isNegLoop } = this.findDistances();
+    const path = []; // Массив кратчайшего пути
 
-    // Найти путь до вершины end (с учётом отрицательного цикла)
-    let negVertex = negLoopVertex;
-    for (let i = 0; i < this.n; i++) {
-      negVertex = path[negVertex];
+    // Найти путь от вершины i до вершины end (с учётом отрицательного цикла)
+    let i = begin - 1; // Отнять 1, так как элементы матрицы считаются с нулевого индекса
+    let j = end - 1;
+    while (j !== -1 && j !== -INFINITY) { // Пока есть предшественники:
+      path.push(j + 1); // -> добавить вершину в путь
+      j = prev[i][j]; // -> взять предыдущую вершину
     }
-    p = [];
-    for (let current = end; current; current = path[current]) {
-      p.push(current);
-      if (current === negVertex && p.length > 1) break; // Прерывание для цикла с отрицательным весом
-    }
-    p.reverse();
+    path.push(begin); // Добавить в массив начальную вершину
+    path.reverse(); // Полученный массив отразить, для получения пути
 
     return {
-      dist: dist[end],
-      path: p.length ? p : null,
-      isNegLoop,
-      negLoopVertex
+      dist,
+      prev,
+      path,
+      isNegLoop
     }
   }
 }
 
+
 // <---- HELPERS ---->
-function printPath(path, begin, end, isNegLoop) {
+
+// Вывести путь
+function printPath(path, prev, begin, end) {
   if (begin === end) {
     return begin;
   }
-  if (path[0] !== begin && isNegLoop) {
-    return "Присутній цикл з від'ємною вагою.";
+  if (prev[begin - 1][end - 1] === -1/0) {
+    return "Неможливо побудувати через присутність циклу з від'ємною вагою.";
   }
-  if (path[0] === end) {
+  if (prev[begin - 1][end - 1] === -1) {
     return 'Не існує.';
   }
   return path.join(' ---> ');
 };
 
-function printDist(dist) {
-  Object.keys(dist).map(v => {
-    console.log(' -> вершини', v, '=', dist[v]);
-  })
-};
-
+// Вывести матрицу
 function printMatrix(matrix) {
   const final = matrix.map(row => {
     return row.map(col => 
-      col === 1/0 ? 'INF'
-      : col === -1/0
+      col === 1/0 ? 'INF' // Если 'бесконечность', то заменить значение на 'INF'
+      : col === -1/0 // Если 'минус бесконечность', то заменить значение на '-INF'
         ? '-INF'
         : col
     )

@@ -111,6 +111,7 @@ function main() {
     );
   }
 
+  console.log("\n");
 };
 
 // МАТРИЦЯ РАССТОЙНИЙ

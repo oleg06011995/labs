@@ -14,11 +14,13 @@ const compose = (f1, f2, f3) => (...args) => f3(f2(f1(...args)));
 
 // 1. ЗНАЙТИ МАТРИЦЮ ВІДСТАНЕЙ
 const D = getDistanceMatrix();
-console.log("\nМАТРИЦЯ ВІДСТАНЕЙ:\n", D, "\n");
+console.log("\nМАТРИЦЯ ВІДСТАНЕЙ:");
+printMatrix(D);
 
 // 2. ЗНАЙТИ МАТРИЦЮ ДОСЯЖНОСТІ
 const R = getReachabilityMatrix();
-console.log("\nМАТРИЦЯ ДОСЯЖНОСТІ:\n", R, "\n");
+console.log("\nМАТРИЦЯ ДОСЯЖНОСТІ:");
+printMatrix(R);
 
 // 3. ЗНАЙТИ ТИП ГРАФУ
 console.log("\nТИП ГРАФУ:");
@@ -110,4 +112,11 @@ function checkGraphType(R) {
     ) ? 'low' : null;
   }
   return type;
+};
+
+// Вывести матрицу
+function printMatrix(matrix) {
+  matrix.forEach(item => {
+    console.log(item.join('\t'));
+  });
 };

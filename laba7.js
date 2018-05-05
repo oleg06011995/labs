@@ -46,18 +46,21 @@ function main(self, str) {
   
   const algorithm = new Dijkstra(Graph); // Инициализация алгоритма Дейкстры
 
-  console.log("\nРЕБРА ГРАФУ:");
-  console.log(Graph.edges);
+  console.log("\nРЕБРА ГРАФУ У ВИГЛЯДІ СУМІЖНИХ ВЕРШИН (З ВАГОЮ):");
+  printEdges(Graph.edges);
 
   const { path, distances, count } = algorithm.findDistances(start, finish); // Найти путь и дистанции
   const distance = distances[finish]; // подсчёт полной дистанции между указанными вершинами
 
   // Вывод результатов
-  console.log("\nНАЙКОРОТША ВІДСТАНЬ::\n =", distance);
-  console.log("\nНАЙКОРОТШИЙ ШЛЯХ ВІД ВЕРШИНИ " + start + " ДО ВЕРШИНИ " + finish + ":\n", buildPath(path.reverse()));
+  console.log("\nНАЙКОРОТША ВІДСТАНЬ:\n =", distance);
+  console.log(
+    "\nНАЙКОРОТШИЙ ШЛЯХ ВІД ВЕРШИНИ " + start + " ДО ВЕРШИНИ " + finish + ":\n",
+    printPath(path.reverse())
+  );
   console.log("\nКІЛЬКІСТЬ ПРОХОДІВ ДЛЯ ПОШУКУ НАЙКОРОТШОГО ШЛЯХУ:\n =", count);
   console.log("\nНАЙКОРОТШИЙ ШЛЯХ ВІД ВЕРШИНИ " + start + " ДО:");
-  console.log(buildDist(distances));
+  console.log(printDist(distances));
   console.log("\n");
 };
 
@@ -153,13 +156,31 @@ function Dijkstra(G) {
   }
 };
 
+
 // <---- HELPERS ---->
-function buildPath(path) {
+
+// Вывести путь
+function printPath(path) {
   return path.join(' ---> ')
 };
 
-function buildDist(dist) {
+// Вывести расстояния
+function printDist(dist) {
   Object.keys(dist).map(v => {
     console.log(' -> вершини', v, '=', dist[v])
   })
+  return '';
+};
+
+// Вывести ребра
+function printEdges(edges) {
+  const final = {...edges};
+  Object.keys(final).forEach(begin => {
+    console.log(begin);
+    Object.keys(final[begin]).forEach(end => {
+      if (final[begin][end] < 1/0) {
+        console.log("->", end, "=", final[begin][end]);
+      }
+    });
+  });
 };
