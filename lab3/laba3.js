@@ -12,17 +12,17 @@ const Graph = InitGraph('lab3/graph3.txt', true);
 // Хэлпер: композиция функций
 const compose = (f1, f2, f3) => (...args) => f3(f2(f1(...args)));
 
-// 1. ЗНАЙТИ МАТРИЦЮ ВІДСТАНЕЙ
+// 1. НАЙТИ МАТРИЦУ РАССТОЯНИЙ
 const D = getDistanceMatrix();
 console.log("\nМАТРИЦЯ ВІДСТАНЕЙ:");
 printMatrix(D);
 
-// 2. ЗНАЙТИ МАТРИЦЮ ДОСЯЖНОСТІ
+// 2. НАЙТИ МАТРИЦУ ДОСТИЖИМОСТИ
 const R = getReachabilityMatrix();
 console.log("\nМАТРИЦЯ ДОСЯЖНОСТІ:");
 printMatrix(R);
 
-// 3. ЗНАЙТИ ТИП ГРАФУ
+// 3. НАЙТИ ТИП ГРАФА
 console.log("\nТИП ГРАФУ:");
 const type = checkGraphType(R);
 switch(type) {
@@ -39,7 +39,7 @@ switch(type) {
     console.log("Граф не зв’язананий\n")
 }
 
-// МАТРИЦЯ ВІДСТАНЕЙ
+// МАТРИЦА РАССТОЯНИЙ
 function getDistanceMatrix() {
   const D = [];
   let matrixPower;
@@ -70,7 +70,7 @@ function getDistanceMatrix() {
   return D;
 };
 
-// МАТРИЦЯ ДОСЯЖНОСТІ
+// МАТРИЦА ДОСТИЖИМОСТИ
 // По формуле: B[(I + ∆)^n–1], где:
 // n - количество вершин
 // B - преобразование всех значений >0 в 1, а всех 0 в 0.

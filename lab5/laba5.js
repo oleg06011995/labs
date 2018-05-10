@@ -1,5 +1,5 @@
 'use strict';
-// При реалізації вважати, що заданий граф є орієнтованим.
+// СЧИТАТЬ, ЧТО ГРАФ ОРИЕНТИРОВАННЫЙ
 
 // Весь код по созданию графа: его матрицы, рёбер
 const InitGraph = require('../graph.js');
@@ -15,7 +15,11 @@ let currentLabel = Graph.n; // Текущий порядок вершин
 const canSort = TopologicalSort(Graph); // Возвращает true, если граф ацикличный
 
 if (canSort) {
-  console.log("\nТопологічний порядок кожної вершини: ", topSort, "\n");
+  console.log(
+    "\nТопологічний порядок кожної вершини:", 
+    Object.keys(topSort).map(v => "\nВершина " + v + " -> порядок " + topSort[v]).join(''),
+    "\n"
+  );
   console.log("Вершини, відповідно до порядку: ", order.reverse().join(' --- '), "\n");
 } else {
   console.log("\nНеможливо відсортувати, оскільки присутній цикл\n");

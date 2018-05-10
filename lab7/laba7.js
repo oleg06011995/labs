@@ -1,15 +1,8 @@
 'use strict';
-// При реалізації вважати, що заданий граф є орієнтованим.
+// СЧИТАТЬ, ЧТО ГРАФ ОРИЕНТИРОВАННЫЙ
 
 // Реализован при помощи Очереди Приоритетов -> PriorityQueue
 // для уменьшения количества проходов в алгоритме.
-
-// NOTE!
-// Чтобы реализовать очередь на простом JS-массиве необходимо заменить:
-// ** Q = new PriorityQueue() -> const Q = []
-// ** Q.enqueue(...) -> Q.push({ key: v })
-// ** Q.dequeue() -> Q.shift().key
-// ** while(!Q.isEmpty()) -> while(Q.length > 0)
 
 // Хэлпер для интерактивности в работе с командной строкой
 const ask = require('../promt.js');
@@ -29,8 +22,8 @@ if (Graph.isNegative) {
 Перевірте граф та спробуйте ще раз.\n");
 } else {
   ask(
-    "Введіть через пробіл номера вершин, між якими необхідно провести пошук\n \
-(числа від 1 до n, де n - кількість вершин графа; за замовчуванням '1 8'):",
+    "Введіть через пробіл номера вершин, між якими необхідно провести пошук.\n\
+Числа від 1 до n, де n - кількість вершин графа (за замовчуванням '1 8'):",
     main
   );
 }
@@ -73,7 +66,6 @@ function Dijkstra(G) {
   // Найти кратчайший путь между вершинами
   this.findDistances = function (begin, end) {
     const Q = new PriorityQueue(), // Очередь Приоритетов
-    // const Q = [], // см. NOTE!
         distances = {},
         previous = {}; // массив текущего пути: вершины с минимальными дистанциями
     let path = [],
@@ -85,19 +77,16 @@ function Dijkstra(G) {
       if (v === begin) {
         distances[v] = 0;
         Q.enqueue(v, 0);
-        // Q.push({ key: v }); // см. NOTE!
       } else {
         distances[v] = INFINITY;
         Q.enqueue(v, INFINITY);
-        // Q.push({ key: v }); // см. NOTE!
       }
       previous[v] = null;
     }
 
     // Цикл: пока очередь не пуста
     while (!Q.isEmpty()) {
-    // while(Q.length > 0) { // см. NOTE!
-      
+
       // Считать проходы только пока не найден кратчайший путь между begin и end.
       // Остальные проходы нужны для нахождения расстояния от begin до остальных вершин.
       if(path.length === 0) { 
@@ -105,7 +94,6 @@ function Dijkstra(G) {
       }
       
       smallest = Q.dequeue(); // берём из очереди вершину с минимальным расстоянием
-      // smallest = Q.shift().key; // см. NOTE!
 
       // Сформировать ОБРАТНЫЙ маршрут, если найдена end вершина:
       if (smallest === end) {
@@ -132,7 +120,6 @@ function Dijkstra(G) {
           previous[v] = smallest; // запомнить вершину как "предыдущую" к текущей
 
           Q.enqueue(v, dist); // добавить в очередь вершину с дистанцией
-          // Q.push({ key: v }); // см. NOTE!
         }
       }
     }
@@ -157,7 +144,7 @@ function Dijkstra(G) {
 };
 
 
-// <---- HELPERS ---->
+// HELPERS ---->
 
 // Вывести путь
 function printPath(path) {

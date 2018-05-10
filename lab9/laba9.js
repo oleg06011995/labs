@@ -8,8 +8,8 @@ const InitGraph = require('../weightedGraph.js');
 const Graph = InitGraph('lab9/graph9.txt', true);
 
 ask(
-  "Введіть через пробіл номера вершин, між якими необхідно провести пошук,\n \
-(числа від 1 до n, де n - кількість вершин графа; за замовчуванням '1 8'):",
+"Введіть через пробіл номера вершин, між якими необхідно провести пошук.\n\
+Числа від 1 до n, де n - кількість вершин графа (за замовчуванням '1 8'):",
   main
 );
 
@@ -143,7 +143,7 @@ function FloydWarshall(G) {
 }
 
 
-// <---- HELPERS ---->
+// HELPERS ---->
 
 // Вывести путь
 function printPath(path, prev, begin, end) {
