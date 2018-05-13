@@ -7,7 +7,7 @@ const helpers = require('../matrix.helpers.js');
 const InitGraph = require('../graph.js');
 
 // Инициализировать граф
-const Graph = InitGraph('lab2/graph2.txt');
+const Graph = InitGraph('graph2.txt');
 
 main();
 

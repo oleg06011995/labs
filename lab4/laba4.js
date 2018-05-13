@@ -8,7 +8,7 @@ const ask = require('../promt.js');
 const InitGraph = require('../graph.js');
 
 // Инициализировать граф
-const Graph = InitGraph('lab4/graph4.txt');
+const Graph = InitGraph('graph4.txt');
 
 ask(
   "Введіть номера вершини, з якої необхідно почати пошук.\n\

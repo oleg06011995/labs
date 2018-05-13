@@ -5,7 +5,7 @@ const ask = require('../promt.js');
 const InitGraph = require('../weightedGraph.js');
 
 // Инициализировать взвешенный граф
-const Graph = InitGraph('lab8/graph8.txt', true);
+const Graph = InitGraph('graph8.txt', true);
 
 ask(
   "Введіть через пробіл номера вершин, між якими необхідно провести пошук.\n\

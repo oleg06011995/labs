@@ -5,7 +5,7 @@
 const InitGraph = require('../graph.js');
 
 // Инициализировать граф (и транспорированный граф)
-const Graph = InitGraph('lab6/graph6.txt', true, true);
+const Graph = InitGraph('graph6.txt', true, true);
 
 let mark = {}; // Объект для отмечания пройденности вершин
 const orderByTime = []; // Массив вершин в порядке, который соответствуют 

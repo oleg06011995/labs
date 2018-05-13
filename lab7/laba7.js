@@ -14,7 +14,7 @@ const InitGraph = require('../weightedGraph.js');
 const PriorityQueue = require('./PriorityQueue.js');
 
 // Инициализировать взвешенный граф
-const Graph = InitGraph('lab7/graph7.txt', true);
+const Graph = InitGraph('graph7.txt', true);
 
 if (Graph.isNegative) {
   console.log("\n\

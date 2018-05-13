@@ -7,7 +7,7 @@ const helpers = require('../matrix.helpers.js');
 const InitGraph = require('../graph.js');
 
 // Инициализировать граф
-const Graph = InitGraph('lab3/graph3.txt', true);
+const Graph = InitGraph('graph3.txt', true);
 
 // Хэлпер: композиция функций
 const compose = (f1, f2, f3) => (...args) => f3(f2(f1(...args)));

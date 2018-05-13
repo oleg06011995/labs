@@ -5,7 +5,7 @@
 const InitGraph = require('../graph.js');
 
 // Инициализировать граф
-const Graph = InitGraph('lab5/graph5.txt', true);
+const Graph = InitGraph('graph5.txt', true);
 
 const mark = {}; // Объект для отмечания пройденности вершин
 const topSort = {}; // Объект для отмечания топологического порядка вершин
