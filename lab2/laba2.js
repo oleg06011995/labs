@@ -118,30 +118,30 @@ function main() {
 // -> для дальнейшего нахождения метрических характеристик
 function getDistanceMatrix() {
   const D = [];
-  let matrixPower;
-  let nullPresent = true;
-  let power = 1;
+  let matrixPower; // матрица степени матрицы смежности
+  let nullPresent = true; // присутствуют не установленные расстояния
+  let power = 1; // степень
   let notNull = true;
 
   // Пока есть нули в графе (флаг nullPresent) и степень матрицы смежности не нулевая матрица (флаг notNull)
-  let k = 1;
   while (nullPresent && notNull) {
     nullPresent = false;
-    power++;
-    matrixPower = helpers.multiply(matrixPower || Graph.matrix, Graph.matrix); // Возвести в степень матрицу смежности
+    matrixPower = power === 1 // если степень первая, то матрица степени равна матрице смежности
+      ? Graph.matrix
+      : helpers.multiply(matrixPower, Graph.matrix); // Возвести в степень матрицу смежности
     notNull = matrixPower.some(i => i.some(j => j)) // Проверяю, является ли степень матрицы нулевой матрицей
     for (let i = 0; i < matrixPower.length; i++) {
       D[i] = D[i] || [];
       for (let j = 0; j < matrixPower[i].length; j++) {
         if (i === j) {
-          D[i][j] = 0;
+          D[i][j] = 0; // диагональ в ноль
         } else if (!D[i][j]) {
-          nullPresent = true;
-          D[i][j] = matrixPower[i][j] ? power : Graph.matrix[i][j];
+          nullPresent = true; // нули присутствуют
+          D[i][j] = matrixPower[i][j] ? power : matrixPower[i][j]; // значит установить значение в матрицу расстояний
         }
       }
     }
-    k++;
+    power++;
   }
   return D;
 };
